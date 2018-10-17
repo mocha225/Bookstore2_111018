@@ -6,7 +6,7 @@ public final class BookContract {
 
     public final class BookEntry implements BaseColumns {
 
-        public static final String COLUMN_ID = BaseColumns._ID;
+        private static final String COLUMN_ID = BaseColumns._ID;
 
         public static final String TABLE_NAME = "books";
         public static final String COLUMN_PRODUCT_NAME = "name";

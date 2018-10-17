@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -29,25 +30,19 @@ import com.example.android.bookstore2.data.BookDbHelper;
 
 public class CatalogActivity extends AppCompatActivity {
 
+
     private BookDbHelper mDbHelper;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
-
-        // To access our database, we instantiate our SQLiteOpenHelper subclass and pass the
-        // context, which is the current activity.
-        mDbHelper = new BookDbHelper(this);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        displayDatabaseInfo();
-    }
 
-    SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
 
     /**
      * Temporary helper method to display information in the onscreen TextView about the state of
@@ -76,9 +71,10 @@ public class CatalogActivity extends AppCompatActivity {
                 null,                        //Don't filter by row groups
                 null);
 
-        TextView displayView = (TextView) findViewById(R.id.text_view_item);
+        TextView displayView = (TextView) findViewById(R.id.text_view_pet);
+
         try {
-            displayView.setText("Number of rows in items database table: " + "pets.\n\n");
+            displayView.setText(getString(R.string.row_initemdb) + "pets.\n\n");
             displayView.append(BookEntry._ID + " - " +
                     BookEntry.COLUMN_PRODUCT_NAME + " - " +
                     BookEntry.COLUMN_PRODUCT_PRICE + " - " +
@@ -120,6 +116,7 @@ public class CatalogActivity extends AppCompatActivity {
             cursor.close();
         }
     }
+
     /**
      * Helper method to insert hardcoded item data into database, for debugging purposes only.
      */
@@ -129,12 +126,20 @@ public class CatalogActivity extends AppCompatActivity {
 
         //Create a ContentValues object where column names are the keys, and misc schwag's item
         //attributes are it's values.
-        ContentValues values=new ContentValues();
-        values.put(BookEntry.COLUMN_PRODUCT_NAME,"Superman #1");
-        values.put(BookEntry.COLUMN_PRODUCT_PRICE,5555);
-        values.put(BookEntry.COLUMN_PRODUCT_QUANTITY,2);
-        values.put(BookEntry.COLUMN_PRODUCT_SUPPLIER,"B&N");
-        values.put(BookEntry.COLUMN_PRODUCT_PHONE,1555555555 );
+        ContentValues values = new ContentValues();
+        values.put(BookEntry.COLUMN_PRODUCT_NAME, "Superman #1");
+        values.put(BookEntry.COLUMN_PRODUCT_PRICE, 5555);
+        values.put(BookEntry.COLUMN_PRODUCT_QUANTITY, 2);
+        values.put(BookEntry.COLUMN_PRODUCT_SUPPLIER, "B&N");
+        values.put(BookEntry.COLUMN_PRODUCT_PHONE, 1555555555);
+
+        //Insert the values to the database
+        long rowsInserted = db.insert(BookEntry.TABLE_NAME, null, values);
+        if (rowsInserted == -1) {
+            Log.d("CatalogActivity", "Problem inserting data ...");
+        } else{
+            Log.d("CatalogActivity", rowsInserted + " rows inserted successfully...");
+        }
 
         /**
          * Insert new row for Superman #1 in the database, returning the id of that new row.
@@ -144,21 +149,21 @@ public class CatalogActivity extends AppCompatActivity {
          * a new row when there are no values.
          * The 3rd argument is the ContentValues object containing Superman #1's information.
          */
-        db.insert(BookEntry.TABLE_NAME,null ,values);
+        db.insert(BookEntry.TABLE_NAME, null, values);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         //Inflate menu options in the app bar overflow menu
-        getMenuInflater().inflate(R.menu.menu_catalog,menu );
+        getMenuInflater().inflate(R.menu.menu_catalog, menu);
         //Add menu items to app bar
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         //User selected menu option in app bar overflow menu
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             //Respond to "Insert Dummy Data" menu item selection
             case R.id.action_insert_dummy_data:
                 insertItem();
