@@ -20,6 +20,7 @@ import com.example.android.bookstore2.data.BookContract.BookEntry;
 import com.example.android.bookstore2.data.BookDbHelper;
 
 //Saving to maybe use in stage 2 of this app.
+
 /**
  * Allows user to create a new item or edit an existing one.
  */

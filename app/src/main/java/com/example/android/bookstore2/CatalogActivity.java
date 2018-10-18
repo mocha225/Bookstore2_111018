@@ -16,6 +16,7 @@
 package com.example.android.bookstore2;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.android.bookstore2.data.BookContract.BookEntry;
@@ -30,10 +32,7 @@ import com.example.android.bookstore2.data.BookDbHelper;
 
 public class CatalogActivity extends AppCompatActivity {
 
-
     private BookDbHelper mDbHelper;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +40,22 @@ public class CatalogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_catalog);
     }
 
+        // To access our database, we instantiate our subclass of SQLiteOpenHelper
+        // and pass the context, which is the current activity.
 
 
 
-    /**
-     * Temporary helper method to display information in the onscreen TextView about the state of
-     * the bookstore database.
-     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displayDatabaseInfo();
+    }
+
     private void displayDatabaseInfo() {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
 
         String[] projection = {
                 BookEntry._ID,
@@ -137,7 +141,7 @@ public class CatalogActivity extends AppCompatActivity {
         long rowsInserted = db.insert(BookEntry.TABLE_NAME, null, values);
         if (rowsInserted == -1) {
             Log.d("CatalogActivity", "Problem inserting data ...");
-        } else{
+        } else {
             Log.d("CatalogActivity", rowsInserted + " rows inserted successfully...");
         }
 
