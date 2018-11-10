@@ -13,24 +13,32 @@
         android:padding="12dp">
 
         <TextView
-            android:id="@+id/product_name_textview"
+            android:id="@+id/edit_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="casual"
             android:textAppearance="?android:textAppearanceMedium"/>
         <TextView
-            android:id="@+id/product_price_textview"
+            android:id="@+id/edit_item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:textAppearance="?android:textAppearanceSmall"/>
         <TextView
+            android:id="@+id/edit_item_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quantity: " />
+            android:text="@string/quantity_xml" />
 
         <TextView
-            android:id="@+id/product_quantity_textview"
+            android:id="@+id/edit_item_supplier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textAppearance="?android:textAppearanceSmall"/>
+
+        <TextView
+            android:id="@+id/edit_item_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"

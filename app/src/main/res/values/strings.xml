@@ -94,5 +94,6 @@
     <string name="supplier_name_hint">supplier name</string>
     <string name="supplier_phone_number">Supplier Phone Number</string>
     <string name="supplier_phone_number_hint">supplier phone number</string>
+    <string name="quantity_xml">Quantity:</string>
 
 </resources>

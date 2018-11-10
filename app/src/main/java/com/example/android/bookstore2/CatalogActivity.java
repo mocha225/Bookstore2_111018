@@ -15,6 +15,7 @@
  */
 package com.example.android.bookstore2;
 
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -52,7 +53,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
                 startActivity(intent);
             }
         });
@@ -62,16 +63,16 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
-        booksListView.setEmptyView(emptyView);
+        bookListView.setEmptyView(emptyView);
 
 
         // Setup an Adapter to create a list item for each row of book data in the Cursor.
         // There is no book data yet (until the loader finishes) so pass in null for the Cursor.
-        mCursoradapter = new BooksCursorAdapter(this, null);
-        booksListView.setAdapter(mCursorAdapter);
+        mCursorAdapter = new BookCursorAdapter(this, null);
+        bookListView.setAdapter(mCursorAdapter);
 
         // Setup the item click listener
-        booksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
