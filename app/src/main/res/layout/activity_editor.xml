@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Product Name"
+            android:text="@string/product_name"
             android:textStyle="bold|italic" />
 
         <EditText
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:hint="product name"
+            android:hint="@string/book_name_hint"
             android:inputType="textCapWords" />
 
 
@@ -126,5 +126,36 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/plus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/editor_activity_title_new_book" />
+
+        <Button
+            android:id="@+id/order_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_sale"
+            android:textAppearance="?android:textAppearanceButton" />
+
+        <Button
+            android:id="@+id/minus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:textAppearance="?android:textAppearanceButton" />
+
+        <Button
+            android:id="@+id/call_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_call"
+            android:textAppearance="?android:textAppearanceButton" />
+    </LinearLayout>
 </LinearLayout>

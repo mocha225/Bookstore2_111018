@@ -21,7 +21,8 @@
     <string name="action_delete_all_entries">Delete All Books</string>
 
     <!-- Title for the activity to add a new pet [CHAR LIMIT=20] -->
-    <string name="editor_activity_title_new_pet">Add a Book</string>
+    <string name="editor_activity_title_new_book">Add a Book</string>
+    <string name="editor_activity_title_edit_item">Edit Title</string>
 
     <!-- Label for editor menu option to save pet and leave editor [CHAR LIMIT=20] -->
     <string name="action_save">Save</string>
@@ -38,23 +39,6 @@
     <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
     <string name="category_measurement">Measurement</string>
 
-    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_pet_name">Name</string>
-
-    <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_pet_breed">Breed</string>
-
-    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_pet_weight">Weight</string>
-
-    <!-- Units for weight of the pet (kilograms) [CHAR LIMIT=5] -->
-    <string name="unit_pet_weight">kg</string>
-
-    <!-- Label for dropdown menu option if the pet's gender is unknown [CHAR LIMIT=20] -->
-    <string name="gender_unknown">Unknown</string>
-
-    <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
-    <string name="gender_male">Male</string>
 
     <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
     <string name="gender_female">Female</string>
@@ -95,5 +79,15 @@
     <string name="supplier_phone_number">Supplier Phone Number</string>
     <string name="supplier_phone_number_hint">supplier phone number</string>
     <string name="quantity_xml">Quantity:</string>
+    <string name="no_less_than_0_message">Quantity Can\'t be less than 0.</string>
+    <string name="tel_text">Supplier Phone Number</string>
+    <string name="editor_activity_title_new_item">Title of New Item</string>
+
+    <string name="product_name">Book Name</string>
+    <string name="book_name_hint">book name</string>
+    <string name="button_sale">Buy Now!</string>
+    <string name="delete">Delete</string>
+    <string name="button_call">Call Supplier</string>
+    <string name="negative_quantity">You cannot have a negative quantity.</string>
 
 </resources>

@@ -15,7 +15,7 @@
  */
 package com.example.android.bookstore2;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -24,15 +24,18 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import android.widget.Toast;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+
 
 import com.example.android.bookstore2.data.BookContract.BookEntry;
 
@@ -49,17 +52,17 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         setContentView(R.layout.activity_catalog);
 
         // Setup FAB to open EditorActivity
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
                 startActivity(intent);
             }
         });
 
         // Find the ListView which will be populated with the book data
-        ListView bookListView = findViewById(R.id.list);
+        ListView bookListView = (ListView) findViewById(R.id.list);
 
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
@@ -103,8 +106,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         //attributes are it's values.
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMN_PRODUCT_NAME, "Superman #1");
-        values.put(BookEntry.COLUMN_PRODUCT_PRICE, 5555);
-        values.put(BookEntry.COLUMN_PRODUCT_QUANTITY, 2);
+        values.put(BookEntry.COLUMN_PRODUCT_PRICE, "55.55");
+        values.put(BookEntry.COLUMN_PRODUCT_QUANTITY, "2");
         values.put(BookEntry.COLUMN_PRODUCT_SUPPLIER, "B&N");
         values.put(BookEntry.COLUMN_PRODUCT_PHONE, "555-555-5555");
 
@@ -112,6 +115,24 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         //Use the @link BooksEntry#CONTENT_URI to indicate that we want to insert
         //into the books database table.
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
+    }
+
+    private void deleteAllBooks() {
+        // Defines a variable to contain the number of rows deleted
+        int rowsDeleted = 0;
+
+        // Deletes the rows that match the selection criteria
+        rowsDeleted = getContentResolver().delete(BookEntry.CONTENT_URI, null,null);
+        if (rowsDeleted == 0) {
+            // If the value of rowsDeleted is 0, then there was problem with deleting rows
+            // or no rows match the selection criteria.
+            Toast.makeText(this, R.string.error_while_deleting_books,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the deletion was successful and we can display a toast.
+            Toast.makeText(this, R.string.all_books_deleted,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -138,60 +159,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteAllBooks() {
-        // Defines a variable to contain the number of rows deleted
-        int rowsDeleted = 0;
-
-        // Deletes the rows that match the selection criteria
-        rowsDeleted = getContentResolver().delete(
-                BookEntry.CONTENT_URI,   // the user dictionary content URI
-                null,                    // the column to select on
-                null                      // the value to compare to
-        );
-        if (rowsDeleted == 0) {
-            // If the value of rowsDeleted is 0, then there was problem with deleting rows
-            // or no rows match the selection criteria.
-            Toast.makeText(this, R.string.error_while_deleting_books,
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            // Otherwise, the deletion was successful and we can display a toast.
-            Toast.makeText(this, R.string.all_books_deleted,
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void showDeleteConfirmationDialog() {
-
-        /*
-         * If emptyView is already visible, then it means there are no entries in the table.
-         * Thus we don't need to show dialog box to the user for deleting all the entries in the table as table is already empty.
-         */
-        if (!(emptyView.getVisibility() == View.VISIBLE)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.delete_all_books);
-            builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked the "Delete" button, so delete the book.
-                    deleteAllBooks();
-                }
-            });
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked the "Cancel" button, so dismiss the dialog
-                    // and continue editing the book.
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
-                }
-            });
-
-            // Create and show the AlertDialog
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-
-        }
-
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -202,7 +169,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 BookEntry.COLUMN_PRODUCT_PRICE,
                 BookEntry.COLUMN_PRODUCT_QUANTITY,
                 BookEntry.COLUMN_PRODUCT_SUPPLIER,
-                BookEntry.COLUMN_PRODUCT_PHONE,};
+                BookEntry.COLUMN_PRODUCT_PHONE };
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,
@@ -220,7 +187,77 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-    mCursorAdapter.swapCursor(null);
+
+        mCursorAdapter.swapCursor(null);
+    }
+
+    /**
+     * Show a dialog that warns the user there are unsaved changes that will be lost
+     * if they continue leaving the editor.
+     */
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        AlertDialog.Builder altDialog = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog
+                // and continue editing the item.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Prompt the user to confirm that they want to delete this item.
+     */
+    public void createDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog alertDialog = new AlertDialog.Builder(CatalogActivity);
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage(R.string.delete_dialog_msg);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+    
+
+    /**
+     * Perform the deletion of the item in the database.
+     */
+    private void deleteItem() {
+        // Only perform the delete if this is an existing item.
+        if (currentBookUri != null) {
+            // Call the ContentResolver to delete the item at the given content URI.
+            // Pass in null for the selection and selection args because the mCurrentItemUri
+            // content URI already identifies the item that we want.
+            int rowsDeleted = getContentResolver().delete(currentBookUri, null, null);
+
+            // Show a toast message depending on whether or not the delete was successful.
+            if (rowsDeleted == 0) {
+                // If no rows were deleted, then there was an error with the delete.
+                Toast.makeText(this, getString(R.string.editor_delete_item_failed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // the delete was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.editor_delete_item_successful),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        // Close the activity
+        finish();
     }
 }
-

@@ -5,8 +5,11 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+import static java.lang.String.valueOf;
 
 import com.example.android.bookstore2.data.BookContract;
 import com.example.android.bookstore2.data.BookContract.BookEntry;
@@ -49,11 +52,11 @@ public class BookCursorAdapter extends CursorAdapter {
      *                correct row.
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, Context context, final Cursor cursor) {
         //Find the individual views that we want to modify in the list item layout.
-        TextView productNameTextView = (TextView) view.findViewById(R.id.product_name_textview);
-        TextView priceTextView = (TextView) view.findViewById(R.id.product_price_textview);
-        TextView quantityTextView = (TextView) view.findViewById(R.id.product_quantity_textview);
+        TextView productNameTextView = view.findViewById(R.id.product_name_textview);
+        TextView priceTextView = view.findViewById(R.id.product_price_textview);
+        final TextView quantityTextView = view.findViewById(R.id.product_quantity_textview);
 
         // Find the columns of item attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
@@ -74,5 +77,23 @@ public class BookCursorAdapter extends CursorAdapter {
         priceTextView.setText(priceString);
         quantityTextView.setText(quantityString);
 
+        Button saleButton = view.findViewById(R.id.order_button);
+        saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int qtyIndexInt = Integer.parseInt(currentQuantity);
+                qtyIndexInt = qtyIndexInt -1;
+                if (qtyIndexInt < 0) {
+                    Toast toast = Toast.makeText(view.getContext(), R.string.negative_quantity,Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            quantityTextView.setText(valueOf(qtyIndexInt));
+
+            }
+
+        });
+
+
     }
+
 }
