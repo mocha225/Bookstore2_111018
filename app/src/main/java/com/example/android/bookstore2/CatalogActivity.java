@@ -33,9 +33,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
-
 
 import com.example.android.bookstore2.data.BookContract.BookEntry;
 
@@ -44,6 +41,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private static final int BOOKS_LOADER = 0;
 
     BookCursorAdapter mCursorAdapter;
+
+
 
 
     @Override
@@ -192,68 +191,24 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     }
 
     /**
-     * Show a dialog that warns the user there are unsaved changes that will be lost
-     * if they continue leaving the editor.
-     */
-    private void showUnsavedChangesDialog(
-            DialogInterface.OnClickListener discardButtonClickListener) {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        AlertDialog.Builder altDialog = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.unsaved_changes_dialog_msg);
-        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
-        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the item.
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
-
-        // Create and show the AlertDialog
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-    /**
-     * Prompt the user to confirm that they want to delete this item.
-     */
-    public void createDeleteConfirmationDialog() {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the positive and negative buttons on the dialog.
-        AlertDialog alertDialog = new AlertDialog.Builder(CatalogActivity);
-        alertDialog.setTitle("Alert");
-        alertDialog.setMessage(R.string.delete_dialog_msg);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        alertDialog.show();
-    }
-    
-
-    /**
      * Perform the deletion of the item in the database.
      */
     private void deleteItem() {
         // Only perform the delete if this is an existing item.
-        if (currentBookUri != null) {
+        if (mCurrentBookUri != null) {
             // Call the ContentResolver to delete the item at the given content URI.
             // Pass in null for the selection and selection args because the mCurrentItemUri
             // content URI already identifies the item that we want.
-            int rowsDeleted = getContentResolver().delete(currentBookUri, null, null);
+            int rowsDeleted = getContentResolver().delete(mCurrentBookUri, null, null);
 
             // Show a toast message depending on whether or not the delete was successful.
             if (rowsDeleted == 0) {
                 // If no rows were deleted, then there was an error with the delete.
-                Toast.makeText(this, getString(R.string.editor_delete_item_failed),
+                Toast.makeText(this, getString(R.string.editor_delete_book_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
                 // the delete was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_delete_item_successful),
+                Toast.makeText(this, getString(R.string.editor_delete_book_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }

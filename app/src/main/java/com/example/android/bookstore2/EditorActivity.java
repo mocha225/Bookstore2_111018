@@ -146,6 +146,13 @@ public class EditorActivity extends AppCompatActivity implements
         mSupplierEditText.setOnTouchListener(mTouchListener);
         mPhoneEditText.setOnTouchListener(mTouchListener);
 
+        // Setup OnFocusChangeListeners on all the input fields, so we can hide the
+        // soft keyboard and get it out of the way
+        mNameEditText.setOnFocusChangeListener(mFocusChangeListener);
+        mPhoneEditText.setOnFocusChangeListener(mFocusChangeListener);
+        mQuantityEditText.setOnFocusChangeListener(mFocusChangeListener);
+        mPriceEditText.setOnFocusChangeListener(mFocusChangeListener);
+
         //Logic for adding and decreasing items within editor
         mPlusButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,25 +316,24 @@ public class EditorActivity extends AppCompatActivity implements
                 return super.onOptionsItemSelected(item);
         }
 
-                // Setup a dialog to warn the user.
-                // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-                // Create a click listener to handle the user confirming that
-                // changes should be discarded.
-                DialogInterface.OnClickListener discardButtonClickListener =
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+        // Setup a dialog to warn the user.
+        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        // Create a click listener to handle the user confirming that
+        // changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 // User clicked "Discard" button, navigate to parent activity.
-                                NavUtils.navigateUpFromSameTask(EditorActivity.this);
-                            }
-                        };
+                        NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    }
+                };
 
-                // Show a dialog that notifies the user they have unsaved changes
-                showUnsavedChangesDialog(discardButtonClickListener);
-                return true;
-        }
-
+        // Show a dialog that notifies the user they have unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
+        return true;
     }
+
 
     /**
      * This method is called when the back button is pressed.
@@ -346,15 +352,16 @@ public class EditorActivity extends AppCompatActivity implements
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //User click "Discard" button, close the current activity.
                         finish();
                     }
-                };
 
+                };
 
         // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
+        return true;
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -380,51 +387,51 @@ public class EditorActivity extends AppCompatActivity implements
     }
 
 
-        @Override
-        public void onLoadFinished (Loader < Cursor > loader, Cursor cursor){
-            //Finish early if the cursor is null or there is less than 1 row in the cursor
-            if (cursor == null || cursor.getCount() < 1) {
-                return;
-            }
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        //Finish early if the cursor is null or there is less than 1 row in the cursor
+        if (cursor == null || cursor.getCount() < 1) {
+            return;
+        }
 
 // Read data from the first row in the cursor
-            if (cursor.moveToFirst()) {
-                // Find the columns of item attributes that we're interested in
-                int productNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
-                int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_PRICE);
-                int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_QUANTITY);
-                int supplierNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_SUPPLIER);
-                int supplierPhoneNumberColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_PHONE);
+        if (cursor.moveToFirst()) {
+            // Find the columns of item attributes that we're interested in
+            int productNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
+            int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_PRICE);
+            int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_QUANTITY);
+            int supplierNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_SUPPLIER);
+            int supplierPhoneNumberColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_PHONE);
 
-                // Extract out the value from the Cursor for the given column index
-                String name = cursor.getString(productNameColumnIndex);
-                Double price = cursor.getDouble(priceColumnIndex);
-                int quantity = cursor.getInt(quantityColumnIndex);
-                String quantityString = Integer.toString(quantity);
-                String supplierName = cursor.getString(supplierNameColumnIndex);
-                String supplierPhoneNumber = cursor.getString(supplierPhoneNumberColumnIndex);
+            // Extract out the value from the Cursor for the given column index
+            String name = cursor.getString(productNameColumnIndex);
+            Double price = cursor.getDouble(priceColumnIndex);
+            int quantity = cursor.getInt(quantityColumnIndex);
+            String quantityString = Integer.toString(quantity);
+            String supplierName = cursor.getString(supplierNameColumnIndex);
+            String supplierPhoneNumber = cursor.getString(supplierPhoneNumberColumnIndex);
 
-                //convert price to string so it can be displayed
-                String priceString = Double.toString(price);
+            //convert price to string so it can be displayed
+            String priceString = Double.toString(price);
 
-                // Update the views on the screen with the values from the database
-                mNameEditText.setText(name);
-                mPriceEditText.setText(priceString);
-                mQuantityEditText.setText(quantityString);
-                mSupplierEditText.setText(supplierName);
-                mPhoneEditText.setText(supplierPhoneNumber);
+            // Update the views on the screen with the values from the database
+            mNameEditText.setText(name);
+            mPriceEditText.setText(priceString);
+            mQuantityEditText.setText(quantityString);
+            mSupplierEditText.setText(supplierName);
+            mPhoneEditText.setText(supplierPhoneNumber);
 
-            }
         }
+    }
 
-        @Override
-        public void onLoaderReset (Loader < Cursor > loader) {
-            mNameEditText.setText("");
-            mPriceEditText.setText("");
-            mQuantityEditText.setText("");
-            mSupplierEditText.setText("");
-            mPhoneEditText.setText("");
-        }
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mNameEditText.setText("");
+        mPriceEditText.setText("");
+        mQuantityEditText.setText("");
+        mSupplierEditText.setText("");
+        mPhoneEditText.setText("");
+    }
 
 
     private void showUnsavedChangesDialog(
@@ -433,11 +440,11 @@ public class EditorActivity extends AppCompatActivity implements
         // for the postivie and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
-        builder.setmPlusButton(R.string.discard, discardButtonClickListener);
-        builder.setmMinusButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the item.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -449,55 +456,55 @@ public class EditorActivity extends AppCompatActivity implements
         alertDialog.show();
     }
 
-        /**
-         * Prompt the user to confirm that they want to delete this book.
-         */
-        private void showDeleteConfirmationDialog () {
-            // Create an AlertDialog.Builder and set the message, and click listeners
-            // for the positive and negative buttons on the dialog.
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.delete_dialog_msg);
-            builder.setmPlusButton(R.string.delete, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked the "Delete" button, so delete the book.
-                    deleteBook();
-                }
-            });
-            builder.semMinusButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked the "Cancel" button, so dismiss the dialog
-                    // and continue editing the book.
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
-                }
-            });
-
-            // Create and show the AlertDialog
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-
-        /**
-         * Delete the book from the database
-         */
-        private void deleteBook() {
-            // Only perform the delete if this is an existing book.
-            if (mCurrentBookUri != null) {
-                // Call the ContentResolver to delete the book at the given content URI.
-                int rowsDeleted = getContentResolver().delete(mCurrentBookUri, null, null);
-                // Show a toast message depending on whether or not the delete was successful
-                if (rowsDeleted == 0) {
-                    // If no rows were deleted, then there was an error with the delete.
-                    Toast.makeText(this, getString(R.string.editor_delete_book_failed),
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, getString(R.string.editor_delete_book_successful),
-                            Toast.LENGTH_SHORT).show();
-                }
-
+    /**
+     * Prompt the user to confirm that they want to delete this book.
+     */
+    private void showDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_dialog_msg);
+        builder.setmPlusButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the book.
+                deleteBook();
             }
-            // Close the activity
-            finish();
+        });
+        builder.semMinusButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the book.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Delete the book from the database
+     */
+    private void deleteBook() {
+        // Only perform the delete if this is an existing book.
+        if (mCurrentBookUri != null) {
+            // Call the ContentResolver to delete the book at the given content URI.
+            int rowsDeleted = getContentResolver().delete(mCurrentBookUri, null, null);
+            // Show a toast message depending on whether or not the delete was successful
+            if (rowsDeleted == 0) {
+                // If no rows were deleted, then there was an error with the delete.
+                Toast.makeText(this, getString(R.string.editor_delete_book_failed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.editor_delete_book_successful),
+                        Toast.LENGTH_SHORT).show();
+            }
+
         }
+        // Close the activity
+        finish();
+    }
 }
