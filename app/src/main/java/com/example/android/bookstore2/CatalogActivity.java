@@ -15,11 +15,9 @@
  */
 package com.example.android.bookstore2;
 
-import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -41,8 +39,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private static final int BOOKS_LOADER = 0;
 
     BookCursorAdapter mCursorAdapter;
-
-
+    private Uri mCurrentBookUri;
 
 
     @Override
@@ -61,7 +58,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         });
 
         // Find the ListView which will be populated with the book data
-        ListView bookListView = (ListView) findViewById(R.id.list);
+        ListView bookListView = findViewById(R.id.list);
 
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
@@ -171,12 +168,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 BookEntry.COLUMN_PRODUCT_PHONE };
 
         // This loader will execute the ContentProvider's query method on a background thread
-        return new CursorLoader(this,
-                BookEntry.CONTENT_URI,
-                projection,
-                null,
-                null,
-                null);
+        return new android.content.CursorLoader(this, 
+                mCurrentBookUri, projection, null, null, null);
     }
 
     @Override
@@ -195,11 +188,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
      */
     private void deleteItem() {
         // Only perform the delete if this is an existing item.
-        if (mCurrentBookUri != null) {
+
             // Call the ContentResolver to delete the item at the given content URI.
             // Pass in null for the selection and selection args because the mCurrentItemUri
             // content URI already identifies the item that we want.
-            int rowsDeleted = getContentResolver().delete(mCurrentBookUri, null, null);
+            int rowsDeleted = getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
 
             // Show a toast message depending on whether or not the delete was successful.
             if (rowsDeleted == 0) {
@@ -211,8 +204,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 Toast.makeText(this, getString(R.string.editor_delete_book_successful),
                         Toast.LENGTH_SHORT).show();
             }
-        }
-        // Close the activity
-        finish();
+
     }
 }

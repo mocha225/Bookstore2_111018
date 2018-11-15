@@ -30,14 +30,12 @@
             android:textStyle="bold|italic" />
 
         <EditText
-            android:id="@+id/edit_product_name"
+            android:id="@+id/edit_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:hint="@string/book_name_hint"
             android:inputType="textCapWords" />
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -53,13 +51,11 @@
             android:textStyle="bold|italic" />
 
         <EditText
-            android:id="@+id/edit_price"
+            android:id="@+id/edit_item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:hint="@string/price_hint" />
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -74,13 +70,11 @@
             android:textStyle="bold|italic" />
 
         <EditText
-            android:id="@+id/edit_quantity"
+            android:id="@+id/edit_item_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:hint="@string/quantity_hint" />
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -95,14 +89,12 @@
             android:textStyle="bold|italic" />
 
         <EditText
-            android:id="@+id/edit_supplier_name"
+            android:id="@+id/edit_item_supplier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:hint="@string/supplier_name_hint"
             android:inputType="textCapWords" />
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -117,13 +109,11 @@
             android:textStyle="bold|italic" />
 
         <EditText
-            android:id="@+id/edit_supp_phone_number"
+            android:id="@+id/edit_item_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:hint="@string/supplier_phone_number_hint" />
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -153,6 +143,13 @@
 
         <Button
             android:id="@+id/call_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_call"
+            android:textAppearance="?android:textAppearanceButton" />
+
+        <Button
+            android:id="@+id/delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_call"

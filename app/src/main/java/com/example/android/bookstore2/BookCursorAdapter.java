@@ -1,7 +1,11 @@
 package com.example.android.bookstore2;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.provider.BaseColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +13,16 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import static java.lang.String.valueOf;
 
 import com.example.android.bookstore2.data.BookContract;
 import com.example.android.bookstore2.data.BookContract.BookEntry;
 
 
 public class BookCursorAdapter extends CursorAdapter {
+
     public static final String LOG_TAG = BookContract.class.getSimpleName();
 
-    private final Context mContext;
+
 
     /**
      * Constructs a new {@link BookCursorAdapter}.
@@ -28,7 +32,7 @@ public class BookCursorAdapter extends CursorAdapter {
      */
     public BookCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* flags */);
-        mContext = context;
+
     }
 
     /**
@@ -52,7 +56,7 @@ public class BookCursorAdapter extends CursorAdapter {
      *                correct row.
      */
     @Override
-    public void bindView(View view, Context context, final Cursor cursor) {
+    public void bindView(final View view, final Context context, Cursor cursor) {
         //Find the individual views that we want to modify in the list item layout.
         TextView productNameTextView = view.findViewById(R.id.product_name_textview);
         TextView priceTextView = view.findViewById(R.id.product_price_textview);
@@ -67,7 +71,7 @@ public class BookCursorAdapter extends CursorAdapter {
         String currentProdName = cursor.getString(nameColumnIndex);
         Double currentPrice = cursor.getDouble(priceColumnIndex);
         final int currentQuantity = cursor.getInt(quantityColumnIndex);
-        String quantityString = Integer.toString(currentQuantity);
+        final String quantityString = Integer.toString(currentQuantity);
 
         //convert price to string so it can be displayed
         String priceString = Double.toString(currentPrice);
@@ -77,17 +81,25 @@ public class BookCursorAdapter extends CursorAdapter {
         priceTextView.setText(priceString);
         quantityTextView.setText(quantityString);
 
+        final int currentBookRowId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
+
         Button saleButton = view.findViewById(R.id.order_button);
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                int qtyIndexInt = Integer.parseInt(currentQuantity);
-                qtyIndexInt = qtyIndexInt -1;
-                if (qtyIndexInt < 0) {
+            public void onClick(View view) {
+                int updatedQuantity = Integer.parseInt(quantityString);
+                if (updatedQuantity < 0) {
+                    updatedQuantity = updatedQuantity -1;
+
+                    ContentValues values = new ContentValues();
+                    values.put(BookEntry.COLUMN_PRODUCT_QUANTITY, updatedQuantity);
+
+                    Uri newUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, currentBookRowId);
+                    context.getContentResolver().update(newUri, values, null, null);
+
                     Toast toast = Toast.makeText(view.getContext(), R.string.negative_quantity,Toast.LENGTH_LONG);
                     toast.show();
                 }
-            quantityTextView.setText(valueOf(qtyIndexInt));
 
             }
 

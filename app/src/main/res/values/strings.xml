@@ -89,5 +89,8 @@
     <string name="delete">Delete</string>
     <string name="button_call">Call Supplier</string>
     <string name="negative_quantity">You cannot have a negative quantity.</string>
+    <string name="delete_dialog_msg">Click on Delete</string>
+    <string name="cancel">Cancel the Deletion</string>
+
 
 </resources>
