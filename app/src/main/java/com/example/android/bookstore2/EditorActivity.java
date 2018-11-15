@@ -374,7 +374,7 @@ public class EditorActivity extends AppCompatActivity implements
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,
-                mCurrentBookUri,
+                BookEntry.CONTENT_URI,
                 projection,
                 null,
                 null,
