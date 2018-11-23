@@ -85,7 +85,7 @@
 
     <string name="product_name">Book Name</string>
     <string name="book_name_hint">book name</string>
-    <string name="button_sale">Buy Now!</string>
+    <string name="button_sale">SALE</string>
     <string name="delete_all">Delete All</string>
     <string name="button_call">Call Supplier</string>
     <string name="negative_quantity">You cannot have a negative quantity.</string>
